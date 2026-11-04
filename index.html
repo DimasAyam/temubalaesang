@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <!-- 
+    ========================================
+    KKN-PPM UGM TEMU BALAESANG - MAIN HOMEPAGE
+    ========================================
+    Domain: temubalaesang.me
+    Portal: portal.temubalaesang.me
+    ========================================
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temu Balaesang — KKN-PPM Universitas Gadjah Mada</title>
+  <meta name="description"
+    content="Satu titik temu untuk seuntai cerita baru. Website resmi KKN-PPM UGM Unit Temu Balaesang, Kecamatan Balaesang, Kabupaten Donggala, Sulawesi Tengah." />
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- STYLES & SCRIPTS -->
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <!-- BACKGROUND PHOTO LAYER (Soft Blurry bg.png with low opacity) -->
+  <div class="bg-photo-layer" aria-hidden="true"></div>
+
+  <!-- AMBIENT GLOW OVERLAY -->
+  <div class="ambient-glow-layer" aria-hidden="true"></div>
+
+  <!-- UNDERWATER BUBBLE CANVAS (Zero external asset particle engine) -->
+  <canvas id="underwater-canvas" aria-hidden="true"></canvas>
+
+  <!-- EASTER EGG: MASSIVE RED ARROW INDICATOR -->
+  <div id="easter-egg-arrow-tip" aria-hidden="true">
+    <svg class="arrow-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Massive red arrow pointing upwards at the logo -->
+      <path d="M32 4L12 26H22V58H42V26H52L32 4Z" fill="#DC2626" stroke="#FFFFFF" stroke-width="3"
+        stroke-linejoin="round" />
+    </svg>
+    <span id="arrow-tip-text" class="arrow-bubble-text">KLIK SEKALI LAGI! 🎯</span>
+  </div>
+
+  <!-- EASTER EGG: SPAWNED TURTLE MASCOT -->
+  <div id="easter-egg-turtle" style="display: none;" title="Klik penyu untuk beristirahat kembali ke header">
+    <img src="maskot.png" alt="Maskot Penyu Temu Balaesang" />
+  </div>
+
+  <!-- EASTER EGG STATUS BADGE -->
+  <div id="turtle-status-pill">
+    <span>🐢</span>
+    <span>Si Penyu Sedang Berenang! (Klik penyu untuk kembali)</span>
+  </div>
+
+  <!-- SITE HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <!-- START / LEFT EDGE LOGO (EMBLEM & EASTER EGG TRIGGER) -->
+      <div class="logo-link logo-start">
+        <div id="header-logo" role="button" tabindex="0" title="Klik logo untuk kejutan rahasia!">
+          <img id="header-logo-img" src="logo-placeholder2.png" alt="Logo KKN Temu Balaesang"
+            class="site-logo site-logo--emblem" />
+        </div>
+      </div>
+
+      <!-- CENTER HEADER TITLE & NAV -->
+      <div class="header-center">
+        <h1 class="header-title">KKN-PPM UGM • TEMU BALAESANG</h1>
+        <nav class="header-nav">
+          <a href="#beranda">Beranda</a>
+          <a href="#tentang">Tentang Kami</a>
+          <a href="#program">Fokus Program</a>
+          <a href="https://portal.temubalaesang.me" target="_blank" rel="noopener noreferrer">Portal Seleksi ↗</a>
+        </nav>
+      </div>
+
+      <!-- END / RIGHT EDGE: WORDMARK & ACTIONS -->
+      <div class="header-actions">
+        <a class="logo-link logo-end" href="#beranda" aria-label="Temu Balaesang">
+          <img src="logo-text.png" alt="Temu Balaesang" class="site-logo site-logo--text" />
+        </a>
+
+        <!-- THEME TOGGLE BUTTON -->
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Ganti Tema (Terang / Gelap)"
+          title="Ganti Tema">☀️</button>
+
+        <!-- PORTAL DIRECT LINK BUTTON -->
+        <a href="https://portal.temubalaesang.me" target="_blank" rel="noopener noreferrer" class="header-portal-btn">
+          Portal ↗
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN HOMEPAGE CONTENT -->
+  <main class="main-content" id="beranda">
+    <!-- HERO SECTION -->
+    <section class="section hero-section">
+      <div class="container">
+        <div class="hero-tagline-badge">
+          <span>🌊</span>
+          <span>KKN-PPM UNIVERSITAS GADJAH MADA 2026/2027</span>
+        </div>
+
+        <h2 class="hero-title">
+          Satu Titik Temu,<br />
+          <span class="gradient-text">Seuntai Cerita Baru.</span>
+        </h2>
+
+        <p class="hero-subtitle">
+          Mengabdi dengan hati, merajut potensi bahari, dan melangkah bersama masyarakat
+          Kecamatan Balaesang, Kabupaten Donggala, Sulawesi Tengah.
+        </p>
+
+        <div class="hero-actions">
+          <a href="https://portal.temubalaesang.me" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            Masuk Portal Seleksi ↗
+          </a>
+          <a href="#tentang" class="btn btn-secondary">
+            Kenali Program Kami ↓
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="section" id="tentang">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Tentang Temu Balaesang</h2>
+          <p class="section-subtitle">
+            Balaesang adalah sebuah kecamatan pesisir di Kabupaten Donggala yang kaya akan pesona maritim, kearifan
+            lokal,
+            serta keanekaragaman hayati laut yang memukau.
+          </p>
+        </div>
+
+        <!-- 3 CORE PILLARS -->
+        <div class="cards-grid" id="program">
+          <article class="feature-card">
+            <div class="feature-icon-box">🐢</div>
+            <h3>Konservasi & Bahari</h3>
+            <p>
+              Mendukung perlindungan ekosistem pesisir, terumbu karang, dan konservasi habitat penyu laut yang menjadi
+              simbol
+              kebanggaan dan keharmonisan alam Balaesang.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-box">🌾</div>
+            <h3>Pemberdayaan Masyarakat</h3>
+            <p>
+              Mendorong penguatan ekonomi warga melalui inovasi produk olahan lokal, pendampingan UMKM desa, dan
+              pengembangan
+              potensi ekowisata berbasis komunitas.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon-box">💡</div>
+            <h3>Edukasi & Digitalisasi</h3>
+            <p>
+              Meningkatkan literasi generasi muda serta membangun kanal informasi digital desa guna memperkenalkan
+              potensi
+              Balaesang ke panggung nusantara.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTAL PROMO BANNER -->
+    <section class="section">
+      <div class="container">
+        <div class="portal-banner-card">
+          <div class="portal-banner-text">
+            <h2>Seleksi Penerus Tim KKN Temu Balaesang 2027</h2>
+            <p>
+              Bagi rekan-rekan pendaftar, silakan lakukan pengecekan status seleksi tim melalui portal resmi kami.
+            </p>
+          </div>
+          <a href="https://portal.temubalaesang.me" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            Buka Portal Pengumuman ↗
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-contact">
+        <a href="https://www.instagram.com/temubalaesang?vrfl=MTdnbXNsaWZ4enFpaw==" target="_blank"
+          rel="noopener noreferrer" class="footer-link">
+          <svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+          </svg>
+          temubalaesang
+        </a>
+
+        <span class="footer-divider" aria-hidden="true">•</span>
+
+        <a href="mailto:kkntemubalaesang@gmail.com" class="footer-link">
+          <svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+          kkntemubalaesang@gmail.com
+        </a>
+
+        <span class="footer-divider" aria-hidden="true">•</span>
+
+        <a href="https://www.tiktok.com/@temu.balaesang" target="_blank" rel="noopener noreferrer" class="footer-link">
+          <svg class="footer-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
+          </svg>
+          temu.balaesang
+        </a>
+      </div>
+
+      <div class="footer-bottom">
+        <small>&copy; <span id="year"></span> KKN-PPM UGM Temu Balaesang. All rights reserved.</small>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
