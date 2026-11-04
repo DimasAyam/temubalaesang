@@ -1,75 +1,25 @@
 /* 
   ========================================
-  TEMUBALAESANG.ME - MAIN HOMEPAGE JAVASCRIPT
-  ========================================
-  Features:
-  1. Fullscreen Underwater Bubble Canvas Particle System (Zero external assets)
-  2. The Swimming Turtle Easter Egg:
-     - Multi-click activation on #header-logo
-     - Big massive red arrow with bounce & text tip
-     - getBoundingClientRect() coordinate tracking & smooth logo morph
-     - Pop animation & radial bubble burst
-     - Smooth LERP chasing physics (0.04 factor) with Math.atan2 rotation & swim wobble
-     - Bubble trails from swimming flippers
-     - Click-to-return / reset feature
-  3. Light / Dark Theme toggle with automatic logo-placeholder swap
+  HOMEPAGE JAVASCRIPT
   ========================================
 */
 
 (function () {
     'use strict';
 
-    // ========================================
-    // 1. THEME MANAGEMENT & LOGO SWAP
-    // ========================================
-    const THEME_STORAGE_KEY = 'temubalaesang_theme';
-    const body = document.body;
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const headerLogoImg = document.getElementById('header-logo-img');
-
-    // Logo filenames
-    const LOGO_LIGHT = 'logo-placeholder.png';   // Soft white contour for light theme
-    const LOGO_DARK = 'logo-placeholder2.png';  // Vivid logo for dark theme
-
-    function updateLogoForTheme(isLight) {
-        if (!headerLogoImg) return;
-        headerLogoImg.src = isLight ? LOGO_LIGHT : LOGO_DARK;
-    }
-
-    function setTheme(theme) {
-        const isLight = theme === 'light';
-        if (isLight) {
-            body.classList.add('light-theme');
-            if (themeToggleBtn) themeToggleBtn.textContent = '🌙';
-        } else {
-            body.classList.remove('light-theme');
-            if (themeToggleBtn) themeToggleBtn.textContent = '☀️';
-        }
-        updateLogoForTheme(isLight);
-        localStorage.setItem(THEME_STORAGE_KEY, theme);
-    }
-
-    // Initialize Theme
-    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'dark';
-    setTheme(savedTheme);
-
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            const currentTheme = body.classList.contains('light-theme') ? 'light' : 'dark';
-            setTheme(currentTheme === 'light' ? 'dark' : 'light');
-        });
-    }
-
-    // Update Year in Footer
     const yearEl = document.getElementById('year');
     if (yearEl) {
         yearEl.textContent = new Date().getFullYear();
     }
 
+    const logoEnd = document.querySelector('.logo-end');
+    if (logoEnd) {
+        logoEnd.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
-    // ========================================
-    // 2. UNDERWATER BUBBLE CANVAS ENGINE
-    // ========================================
     const canvas = document.getElementById('underwater-canvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
 
@@ -77,7 +27,7 @@
     let height = 0;
     let bubbles = [];
     let isUnderwaterDense = false;
-    let targetBubbleCount = 35; // Ambient count
+    let targetBubbleCount = 35;
 
     function resizeCanvas() {
         if (!canvas) return;
@@ -114,14 +64,12 @@
         draw(ctx) {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            // Outer translucent bubble
-            ctx.fillStyle = `rgba(186, 230, 253, ${this.opacity * 0.2})`;
+            ctx.fillStyle = `rgba(186, 230, 253, ${this.opacity * 0.22})`;
             ctx.fill();
             ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity * 0.75})`;
             ctx.lineWidth = 1;
             ctx.stroke();
 
-            // Inner light reflection gleam
             ctx.beginPath();
             ctx.arc(
                 this.x - this.radius * 0.35,
@@ -146,7 +94,6 @@
     function setBubbleDensity(dense) {
         isUnderwaterDense = dense;
         targetBubbleCount = dense ? 105 : 35;
-        // Gradually expand or prune
         while (bubbles.length < targetBubbleCount) {
             bubbles.push(new Bubble(true));
         }
@@ -156,14 +103,13 @@
         if (!ctx) return;
         ctx.clearRect(0, 0, width, height);
 
-        // If easter egg is active, draw a subtle deep ocean light shimmer
         if (isUnderwaterDense) {
             const grad = ctx.createRadialGradient(
                 width / 2, height * 0.2, 50,
                 width / 2, height / 2, Math.max(width, height)
             );
             grad.addColorStop(0, 'rgba(56, 189, 248, 0.08)');
-            grad.addColorStop(1, 'rgba(2, 43, 66, 0.18)');
+            grad.addColorStop(1, 'rgba(2, 43, 66, 0.2)');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, width, height);
         }
@@ -173,7 +119,6 @@
             bubbles[i].draw(ctx);
         }
 
-        // If bubble count exceeds target, slowly shrink
         if (bubbles.length > targetBubbleCount) {
             bubbles.pop();
         }
@@ -187,11 +132,6 @@
         requestAnimationFrame(animateCanvas);
     }
 
-
-    // ========================================
-    // 3. SYNTHESIZED SOUND EFFECTS (WEB AUDIO)
-    // ========================================
-    // Zero audio file dependencies! Pure browser web audio synth
     let audioCtx = null;
     function getAudioContext() {
         if (!audioCtx) {
@@ -224,9 +164,7 @@
 
             osc.start(now);
             osc.stop(now + 0.25);
-        } catch (e) {
-            // Audio policy fallback
-        }
+        } catch (e) { }
     }
 
     function playTickSound() {
@@ -247,13 +185,11 @@
 
             osc.start(now);
             osc.stop(now + 0.09);
-        } catch (e) {}
+        } catch (e) { }
     }
 
 
-    // ========================================
-    // 4. EASTER EGG: MASSIVE RED ARROW & TURTLE
-    // ========================================
+    // EASTER EGG
     const headerLogo = document.getElementById('header-logo');
     const arrowTip = document.getElementById('easter-egg-arrow-tip');
     const arrowText = document.getElementById('arrow-tip-text');
@@ -264,7 +200,6 @@
     let clickResetTimer = null;
     let isEasterEggActive = false;
 
-    // Turtle Physics & LERP
     let turtleX = 0;
     let turtleY = 0;
     let targetMouseX = window.innerWidth / 2;
@@ -273,7 +208,6 @@
     let animFrameId = null;
     let lastTrailTime = 0;
 
-    // Track mouse / touch position
     function onPointerMove(e) {
         if (!isEasterEggActive) return;
         if (e.touches && e.touches.length > 0) {
@@ -288,14 +222,12 @@
     window.addEventListener('mousemove', onPointerMove, { passive: true });
     window.addEventListener('touchmove', onPointerMove, { passive: true });
 
-    // Position the Massive Red Arrow right under / pointing at the logo
     function showRedArrow(textMessage) {
         if (!arrowTip || !headerLogo) return;
 
         const rect = headerLogo.getBoundingClientRect();
-        // Position below the logo pointing up towards it
         const arrowX = rect.left + rect.width / 2;
-        const arrowY = rect.bottom + 12;
+        const arrowY = rect.bottom + 10;
 
         arrowTip.style.left = `${arrowX}px`;
         arrowTip.style.top = `${arrowY}px`;
@@ -313,7 +245,6 @@
         arrowTip.classList.remove('is-active');
     }
 
-    // Radial bubble burst particles on transformation
     function spawnBubbleBurst(originX, originY) {
         const particleCount = 24;
         for (let i = 0; i < particleCount; i++) {
@@ -329,12 +260,10 @@
 
             document.body.appendChild(particle);
 
-            // Radial velocity
             const angle = (Math.PI * 2 / particleCount) * i + (Math.random() * 0.4 - 0.2);
             const distance = 40 + Math.random() * 95;
             const destX = Math.cos(angle) * distance;
             const destY = Math.sin(angle) * distance;
-
             const duration = 500 + Math.random() * 350;
 
             const animation = particle.animate([
@@ -360,11 +289,10 @@
         }
     }
 
-    // Spawns a soft trailing bubble behind the swimming turtle
     function spawnFlipperBubble(x, y) {
         const bubble = document.createElement('div');
         bubble.className = 'bubble-burst-particle';
-        const size = 6 + Math.random() * 8;
+        const size = 10 + Math.random() * 10;
         bubble.style.width = `${size}px`;
         bubble.style.height = `${size}px`;
         bubble.style.left = `${x}px`;
@@ -387,7 +315,6 @@
         anim.onfinish = () => bubble.remove();
     }
 
-    // Main LERP Physics Loop for the Turtle
     function updateTurtlePhysics() {
         if (!isEasterEggActive || !turtleContainer) return;
 
@@ -395,12 +322,9 @@
         const deltaY = targetMouseY - turtleY;
         const distance = Math.hypot(deltaX, deltaY);
 
-        // LERP movement (0.04 factor as requested for realistic swimming momentum)
         turtleX += deltaX * 0.04;
         turtleY += deltaY * 0.04;
 
-        // Rotation towards movement target
-        // Since the turtle sprite naturally points UP, add 90 degrees
         if (distance > 3) {
             const targetAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI) + 90;
             let diff = (targetAngle - turtleAngle) % 360;
@@ -409,7 +333,6 @@
             turtleAngle += diff * 0.08;
         }
 
-        // Natural swimming paddle wiggle
         const now = Date.now();
         const swimWobble = Math.sin(now * 0.008) * (distance > 10 ? 8 : 2.5);
         const renderAngle = turtleAngle + swimWobble;
@@ -418,10 +341,8 @@
         turtleContainer.style.top = `${turtleY}px`;
         turtleContainer.style.transform = `translate(-50%, -50%) rotate(${renderAngle}deg)`;
 
-        // Emit trail bubbles behind turtle when swimming
         if (distance > 15 && now - lastTrailTime > 140) {
             lastTrailTime = now;
-            // Spawn slightly behind the turtle based on opposite of angle
             const rad = (turtleAngle - 90) * (Math.PI / 180);
             const tailX = turtleX - Math.cos(rad) * 32;
             const tailY = turtleY - Math.sin(rad) * 32;
@@ -431,13 +352,11 @@
         animFrameId = requestAnimationFrame(updateTurtlePhysics);
     }
 
-    // Activate the Turtle Transformation
     function triggerEasterEggTransformation() {
         if (isEasterEggActive || !headerLogo || !turtleContainer) return;
         isEasterEggActive = true;
         hideRedArrow();
 
-        // Step 1: Exact position coordinates via getBoundingClientRect()
         const rect = headerLogo.getBoundingClientRect();
         const startX = rect.left + rect.width / 2;
         const startY = rect.top + rect.height / 2;
@@ -448,32 +367,26 @@
         targetMouseY = window.innerHeight / 2;
         turtleAngle = 0;
 
-        // Step 2: Hide static header logo with scale-down / fade-out effect
         headerLogo.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
         headerLogo.style.transform = 'scale(0.1) rotate(-60deg)';
         headerLogo.style.opacity = '0';
         headerLogo.style.pointerEvents = 'none';
 
-        // Step 3: Spawn turtle at exact coordinates
         turtleContainer.style.display = 'block';
         turtleContainer.style.left = `${startX}px`;
         turtleContainer.style.top = `${startY}px`;
         turtleContainer.style.transform = `translate(-50%, -50%) scale(1)`;
         turtleContainer.classList.add('turtle-spawn-anim');
 
-        // Step 4: Bubble burst effect & sound
         spawnBubbleBurst(startX, startY);
         playBloopSound();
 
-        // Increase underwater canvas bubble density
         setBubbleDensity(true);
 
-        // Show status badge
         if (turtleStatusPill) {
             turtleStatusPill.classList.add('is-visible');
         }
 
-        // Once the 0.6s pop animation completes, start smooth chasing physics
         setTimeout(() => {
             turtleContainer.classList.remove('turtle-spawn-anim');
             if (animFrameId) cancelAnimationFrame(animFrameId);
@@ -481,13 +394,11 @@
         }, 600);
     }
 
-    // Deactivate / Reset the Turtle back to the Header
     function resetTurtleToHeader() {
         if (!isEasterEggActive || !headerLogo || !turtleContainer) return;
 
         if (animFrameId) cancelAnimationFrame(animFrameId);
 
-        // Move turtle smoothly back to header logo position
         const rect = headerLogo.getBoundingClientRect();
         const destX = rect.left + rect.width / 2;
         const destY = rect.top + rect.height / 2;
@@ -509,7 +420,6 @@
             turtleContainer.style.transition = '';
             turtleContainer.style.opacity = '1';
 
-            // Restore header logo
             headerLogo.style.pointerEvents = 'auto';
             headerLogo.style.transform = 'scale(1) rotate(0deg)';
             headerLogo.style.opacity = '1';
@@ -520,7 +430,6 @@
         }, 600);
     }
 
-    // Header Logo Click Listener
     if (headerLogo) {
         headerLogo.addEventListener('click', (e) => {
             e.preventDefault();
@@ -530,30 +439,26 @@
             clearTimeout(clickResetTimer);
 
             if (clickCount === 1) {
-                // Click 1: Massive Red Arrow pops up pointing at logo
                 playTickSound();
-                showRedArrow('KLIK SEKALI LAGI! 🎯');
+                showRedArrow('KLIK SEKALI LAGI!');
                 clickResetTimer = setTimeout(() => {
                     hideRedArrow();
                     clickCount = 0;
                 }, 3800);
             } else if (clickCount === 2) {
-                // Click 2: Alert text updates eagerly
                 playTickSound();
-                showRedArrow('SATU KLIK LAGI! 🐢🌊');
+                showRedArrow('LAGIIIIIIIIII!!!');
                 clickResetTimer = setTimeout(() => {
                     hideRedArrow();
                     clickCount = 0;
                 }, 3000);
             } else if (clickCount >= 3) {
-                // Click 3: Transformed!
                 clearTimeout(clickResetTimer);
                 triggerEasterEggTransformation();
             }
         });
     }
 
-    // Reset turtle on clicking the swimming turtle or status pill
     if (turtleContainer) {
         turtleContainer.addEventListener('click', () => {
             resetTurtleToHeader();
@@ -567,4 +472,3 @@
     }
 
 })();
-
